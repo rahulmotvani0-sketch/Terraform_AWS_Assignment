@@ -1,0 +1,27 @@
+# ==============================================================================
+# Remote State Management: Amazon S3 Backend with DynamoDB State Locking
+# Author: Rahul Motvani
+# ==============================================================================
+# To enable this remote state backend:
+# 1. Create an S3 bucket with versioning and server-side encryption enabled:
+#    aws s3api create-bucket --bucket rahul-terraform-state-devops --region ap-south-1 \
+#        --create-bucket-configuration LocationConstraint=ap-south-1
+#    aws s3api put-bucket-versioning --bucket rahul-terraform-state-devops \
+#        --versioning-configuration Status=Enabled
+# 2. Create a DynamoDB table for state locking:
+#    aws dynamodb create-table --table-name terraform-lock-table \
+#        --attribute-definitions AttributeName=LockID,AttributeType=S \
+#        --key-schema AttributeName=LockID,KeyType=HASH \
+#        --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+# 3. Rename this file to backend.tf and run: terraform init -migrate-state
+# ==============================================================================
+
+terraform {
+  backend "s3" {
+    bucket         = "rahul-terraform-state-devops"
+    key            = "devops/assignment8/terraform.tfstate"
+    region         = "ap-south-1"
+    encrypt        = true
+    dynamodb_table = "terraform-lock-table"
+  }
+}

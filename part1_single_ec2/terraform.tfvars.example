@@ -1,0 +1,5 @@
+aws_region    = "ap-south-1"
+environment   = "production"
+instance_type = "t2.micro"
+project_name  = "single-ec2-fullstack"
+admin_cidr    = "0.0.0.0/0"
